@@ -1,8 +1,6 @@
 <h1 align="center">Hi 👋, I'm Gaurav Karmakar</h1>
 <h3 align="center">A passionate Full stack developer, Ai/Ml(visual ai) from India</h3>
 
-<p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=gaurav02081" alt="gaurav02081" /></a> </p>
-
 - 🔭 I’m currently working on [Ai vision lab](https://github.com/gaurav02081/ai-vision-project)
 
 - 🌱 I’m currently learning **react,angular, django ,open cv**
