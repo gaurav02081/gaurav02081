@@ -1,7 +1,7 @@
 <h1 align="center">Hey , I am Gaurav Karmakar</h1>
 <h3 align="center">A passionate Full stack developer, Ai/Ml(visual ai) from India</h3>
 
-- 🔭 I’m currently working on [Ai vision lab](https://github.com/gaurav02081/ai-vision-project)
+- 🔭 My Project on [Ai vision lab](https://github.com/gaurav02081/ai-vision-project)
 
 - 🌱 I’m currently learning **react,angular, django ,open cv**
 
