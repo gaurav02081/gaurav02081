@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 300" width="820" height="300" role="img" aria-labelledby="t d">
+  <title id="t">vision-pipeline: live</title>
+  <desc id="d">An animated factory camera feed: items ride a conveyor, a scan line sweeps, detection boxes lock onto a package, a can and a defective gear, while a terminal logs the detections and asks a RAG system why the line stopped.</desc>
+  <style>
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .ui   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+    /* conveyor items glide in from the left, stop under the camera, glide out */
+    .belt-items { animation: ride 9s cubic-bezier(.45,.05,.35,1) infinite; }
+    @keyframes ride {
+      0%   { transform: translateX(-260px); }
+      18%  { transform: translateX(0); }
+      82%  { transform: translateX(0); }
+      100% { transform: translateX(470px); }
+    }
+    .belt { stroke-dasharray: 14 10; animation: belt 0.6s linear infinite; }
+    @keyframes belt { to { stroke-dashoffset: -24; } }
+    .gear-spin { transform-box: fill-box; transform-origin: center; animation: spin 4s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* scan line sweeps once the items stop */
+    .scan { animation: scan 9s ease-in-out infinite; opacity: 0; }
+    @keyframes scan {
+      0%, 18% { transform: translateY(0); opacity: 0; }
+      20%     { opacity: .9; }
+      34%     { transform: translateY(196px); opacity: .9; }
+      36%, 100% { transform: translateY(196px); opacity: 0; }
+    }
+
+    /* detection boxes draw themselves, hold, then fade before the items leave */
+    .box { fill: none; stroke-width: 2.5; stroke-dasharray: 100; stroke-dashoffset: 100;
+           animation: draw 9s ease-out infinite; }
+    @keyframes draw {
+      0%, 30% { stroke-dashoffset: 100; opacity: 1; }
+      38%     { stroke-dashoffset: 0; }
+      78%     { stroke-dashoffset: 0; opacity: 1; }
+      82%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    .label { opacity: 0; animation: label 9s ease-out infinite; }
+    @keyframes label {
+      0%, 37% { opacity: 0; }
+      40%, 78% { opacity: 1; }
+      82%, 100% { opacity: 0; }
+    }
+    .box.d1 { animation: draw1 9s ease-out infinite; }
+    @keyframes draw1 { 0%, 30.00% { stroke-dashoffset: 100; opacity: 1; } 37.78%, 77% { stroke-dashoffset: 0; opacity: 1; } 80%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+    .label.d1 { animation: label1 9s ease-out infinite; }
+    @keyframes label1 { 0%, 36.67% { opacity: 0; } 40.00%, 77% { opacity: 1; } 80%, 100% { opacity: 0; } }
+    .box.d2 { animation: draw2 9s ease-out infinite; }
+    @keyframes draw2 { 0%, 33.33% { stroke-dashoffset: 100; opacity: 1; } 41.11%, 77% { stroke-dashoffset: 0; opacity: 1; } 80%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+    .label.d2 { animation: label2 9s ease-out infinite; }
+    @keyframes label2 { 0%, 40.00% { opacity: 0; } 43.33%, 77% { opacity: 1; } 80%, 100% { opacity: 0; } }
+    .box.d3 { animation: draw3 9s ease-out infinite; }
+    @keyframes draw3 { 0%, 36.67% { stroke-dashoffset: 100; opacity: 1; } 44.44%, 77% { stroke-dashoffset: 0; opacity: 1; } 80%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+    .label.d3 { animation: label3 9s ease-out infinite; }
+    @keyframes label3 { 0%, 43.33% { opacity: 0; } 46.67%, 77% { opacity: 1; } 80%, 100% { opacity: 0; } }
+    .alert { opacity: 0; animation: alert 9s steps(1) infinite; }
+    @keyframes alert { 0%, 44% { opacity: 0; } 46%, 50%, 54%, 58% { opacity: 1; } 48%, 52%, 56% { opacity: .15; } 62%, 100% { opacity: 0; } }
+
+    /* terminal: each line is uncovered left to right, like typing */
+    .l1 { animation: type1 9s steps(24,end) infinite; }
+    @keyframes type1 { 0%, 3.33% { transform: translateX(0); } 11.11%, 100% { transform: translateX(300px); } }
+    .l2 { animation: type2 9s steps(24,end) infinite; }
+    @keyframes type2 { 0%, 21.11% { transform: translateX(0); } 28.89%, 100% { transform: translateX(300px); } }
+    .l3 { animation: type3 9s steps(24,end) infinite; }
+    @keyframes type3 { 0%, 38.89% { transform: translateX(0); } 46.67%, 100% { transform: translateX(300px); } }
+    .l4 { animation: type4 9s steps(24,end) infinite; }
+    @keyframes type4 { 0%, 47.78% { transform: translateX(0); } 55.56%, 100% { transform: translateX(300px); } }
+    .l5 { animation: type5 9s steps(24,end) infinite; }
+    @keyframes type5 { 0%, 58.89% { transform: translateX(0); } 66.67%, 100% { transform: translateX(300px); } }
+    .l6 { animation: type6 9s steps(24,end) infinite; }
+    @keyframes type6 { 0%, 68.89% { transform: translateX(0); } 76.67%, 100% { transform: translateX(300px); } }
+    .lines { animation: wipe 9s steps(1) infinite; }
+    @keyframes wipe { 0%, 96% { opacity: 1; } 97%, 100% { opacity: 0; } }
+
+    .blink { animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .rec { animation: blink 1.4s steps(1) infinite; }
+  </style>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f2027"/>
+      <stop offset=".5" stop-color="#162a33"/>
+      <stop offset="1" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="scanline" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#36bcf7" stop-opacity="0"/>
+      <stop offset=".7" stop-color="#36bcf7" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#36bcf7" stop-opacity=".9"/>
+    </linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#36bcf7" stroke-opacity=".07"/>
+    </pattern>
+    <clipPath id="term"><rect x="506" y="52" width="294" height="228" rx="8"/></clipPath>
+    <clipPath id="feed"><rect x="20" y="52" width="470" height="228" rx="8"/></clipPath>
+  </defs>
+
+  <!-- window -->
+  <rect x="1" y="1" width="818" height="298" rx="14" fill="url(#bg)" stroke="#30363d"/>
+  <circle cx="24" cy="22" r="6" fill="#ff5f56"/>
+  <circle cx="44" cy="22" r="6" fill="#ffbd2e"/>
+  <circle cx="64" cy="22" r="6" fill="#27c93f"/>
+  <text x="410" y="27" text-anchor="middle" class="mono" font-size="13" fill="#8b949e">gaurav@graeon: ~/vision-pipeline</text>
+
+  <!-- camera feed -->
+  <g clip-path="url(#feed)">
+    <rect x="20" y="52" width="470" height="228" fill="#0b141a"/>
+    <rect x="20" y="52" width="470" height="228" fill="url(#grid)"/>
+
+    <!-- conveyor -->
+    <line x1="20" y1="236" x2="490" y2="236" stroke="#3b4a54" stroke-width="10"/>
+    <line class="belt" x1="20" y1="236" x2="490" y2="236" stroke="#58707e" stroke-width="2"/>
+    <circle cx="40" cy="250" r="8" fill="none" stroke="#3b4a54" stroke-width="3"/>
+    <circle cx="470" cy="250" r="8" fill="none" stroke="#3b4a54" stroke-width="3"/>
+
+    <g class="belt-items">
+      <!-- package -->
+      <g>
+        <rect x="62" y="166" width="88" height="64" rx="3" fill="#c49a6c"/>
+        <rect x="62" y="166" width="88" height="14" fill="#b08657"/>
+        <rect x="100" y="166" width="12" height="64" fill="#e8d3b0" opacity=".8"/>
+        <text x="106" y="214" text-anchor="middle" class="mono" font-size="9" fill="#5c4326">FRAGILE</text>
+      </g>
+      <!-- can -->
+      <g>
+        <rect x="200" y="160" width="46" height="70" rx="8" fill="#8fa3b1"/>
+        <rect x="200" y="182" width="46" height="26" fill="#36bcf7" opacity=".85"/>
+        <ellipse cx="223" cy="161" rx="23" ry="5" fill="#b8c7d1"/>
+      </g>
+      <!-- defective gear (one tooth missing, crack) -->
+      <g transform="translate(350 190)">
+        <g class="gear-spin">
+          <circle r="34" fill="none" stroke="#9aa5ad" stroke-width="12" stroke-dasharray="9.4 7.4" stroke-dashoffset="2"/>
+          <circle r="27" fill="#9aa5ad"/>
+          <circle r="9" fill="#0b141a"/>
+          <path d="M-4 -26 L2 -14 L-3 -6" fill="none" stroke="#f85149" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- detections (static positions: the items are parked under the camera) -->
+    <rect class="box d1" x="54" y="158" width="104" height="80" rx="4" stroke="#3fb950" pathLength="100"/>
+    <g class="label d1">
+      <rect x="54" y="140" width="104" height="17" rx="3" fill="#3fb950"/>
+      <text x="60" y="152" class="mono" font-size="11" fill="#0d1117" font-weight="700">package 0.99</text>
+    </g>
+
+    <rect class="box d2" x="192" y="150" width="62" height="86" rx="4" stroke="#3fb950" pathLength="100"/>
+    <g class="label d2">
+      <rect x="192" y="132" width="78" height="17" rx="3" fill="#3fb950"/>
+      <text x="198" y="144" class="mono" font-size="11" fill="#0d1117" font-weight="700">can 0.97</text>
+    </g>
+
+    <rect class="box d3" x="306" y="146" width="88" height="88" rx="4" stroke="#f85149" pathLength="100"/>
+    <g class="label d3">
+      <rect x="306" y="128" width="110" height="17" rx="3" fill="#f85149"/>
+      <text x="312" y="140" class="mono" font-size="11" fill="#0d1117" font-weight="700">defect 0.96 ⚠</text>
+    </g>
+
+    <!-- scan line -->
+    <rect class="scan" x="20" y="34" width="470" height="24" fill="url(#scanline)"/>
+
+    <!-- HUD -->
+    <text x="32" y="74" class="mono" font-size="11" fill="#36bcf7">CAM-03 · LINE 3</text>
+    <circle class="rec" cx="420" cy="70" r="5" fill="#f85149"/>
+    <text x="430" y="74" class="mono" font-size="11" fill="#f85149">REC</text>
+    <path d="M32 92 v-10 h10 M478 92 v-10 h-10 M32 266 v10 h10 M478 266 v10 h-10" fill="none" stroke="#36bcf7" stroke-opacity=".6" stroke-width="2" transform="translate(0 -6)"/>
+    <rect class="alert" x="150" y="86" width="210" height="26" rx="5" fill="#f85149" fill-opacity=".15" stroke="#f85149"/>
+    <text class="alert mono" x="255" y="104" text-anchor="middle" font-size="12" fill="#ff7b72" font-weight="700">LINE STOPPED · DEFECT</text>
+  </g>
+  <rect x="20" y="52" width="470" height="228" rx="8" fill="none" stroke="#30363d"/>
+
+  <!-- terminal -->
+  <rect x="506" y="52" width="294" height="228" rx="8" fill="#0d1117" stroke="#30363d"/>
+  <g class="lines mono" font-size="11.5" clip-path="url(#term)">
+    <text x="518" y="78"><tspan fill="#3fb950">$</tspan><tspan fill="#c9d1d9"> python detect.py --cam 3</tspan></text>
+    <text x="518" y="102" fill="#8b949e">loading model …… ok (cuda)</text>
+    <text x="518" y="126" fill="#c9d1d9">frame 4217 · 3 objects · 11 ms</text>
+    <text x="518" y="150" fill="#ff7b72">✗ gear: crack, tooth missing</text>
+    <text x="518" y="174"><tspan fill="#3fb950">$</tspan><tspan fill="#c9d1d9"> ask "why did line 3 stop?"</tspan></text>
+    <text x="518" y="198" fill="#d2a8ff">→ SOP-12: reject cracked gears</text>
+    <text x="518" y="214" fill="#d2a8ff">  and recalibrate press #2</text>
+
+    <!-- covers that slide away to "type" each line -->
+    <g fill="#0d1117">
+      <rect class="cover l1" x="512" y="64" width="284" height="20"/>
+      <rect class="cover l2" x="512" y="88" width="284" height="20"/>
+      <rect class="cover l3" x="512" y="112" width="284" height="20"/>
+      <rect class="cover l4" x="512" y="136" width="284" height="20"/>
+      <rect class="cover l5" x="512" y="160" width="284" height="20"/>
+      <rect class="cover l6" x="512" y="184" width="284" height="36"/>
+    </g>
+  </g>
+  <text x="518" y="262" class="mono" font-size="11.5"><tspan fill="#3fb950">$</tspan><tspan class="blink" fill="#c9d1d9"> █</tspan></text>
+</svg>
