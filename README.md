@@ -89,6 +89,13 @@ class Gaurav:
   </picture>
 </p>
 
+### 🌌 Off the clock
+
+<p align="center">
+  <img src="./assets/starry-night.svg" alt="Animated homage to Van Gogh's The Starry Night: a swirling sky of brush strokes, glowing stars and a crescent moon over a village, with a cypress swaying in the foreground" width="820" />
+</p>
+<p align="center"><sub><i>The Starry Night, redrawn as code. Every brush stroke is generated.</i></sub></p>
+
 <!-- Footer -->
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=110&section=footer" alt="" />
